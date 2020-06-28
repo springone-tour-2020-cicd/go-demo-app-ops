@@ -1,0 +1,15 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: tekton
+spec:
+  destination:
+    namespace: default
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    path: cicd/tekton
+    repoURL: https://github.com/springone-tour-2020-cicd/go-demo-app-ops.git
+    targetRevision: HEAD
+  syncPolicy:
+    automated: {}

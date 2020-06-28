@@ -1,0 +1,13 @@
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: EventListener
+metadata:
+  name: build-event-listener
+spec:
+  serviceAccountName: build-bot
+  serviceType: LoadBalancer
+  triggers:
+  - name: build-trigger
+    template:
+      name: build-trigger-template
+    bindings:
+    - ref: build-trigger-binding

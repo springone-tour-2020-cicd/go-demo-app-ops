@@ -1,0 +1,13 @@
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: EventListener
+metadata:
+  name: ops-dev-event-listener
+spec:
+  serviceAccountName: build-bot
+  serviceType: LoadBalancer
+  triggers:
+  - name: ops-dev-trigger
+    template:
+      name: ops-dev-trigger-template
+    bindings:
+    - ref: ops-dev-trigger-binding

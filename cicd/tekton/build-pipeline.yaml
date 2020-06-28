@@ -1,0 +1,95 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: build-pipeline
+spec:
+  params:
+  - name: repo-url
+    type: string
+    description: The Git repository URL to clone from.
+  - name: revision
+    type: string
+    description: The Git revision to clone.
+  - name: github-token-secret
+    type: string
+    description: Name of the secret holding the github-token.
+  - name: github-token-secret-key
+    description: Name of the secret key holding the github-token.
+  workspaces:
+  - name: shared-workspace
+    description: This workspace will receive the cloned git repo and be passed to
+      the next Task.
+  - name: shared-ops-workspace
+    description: This workspace will receive the cloned Git ops repo and be passed
+      to the next Task.
+  tasks:
+  - name: fetch-repository
+    taskRef:
+      name: git-clone
+    workspaces:
+    - name: output
+      workspace: shared-workspace
+    params:
+    - name: url
+      value: $(params.repo-url)
+    - name: revision
+      value: $(params.revision)
+    - name: deleteExisting
+      value: "true"
+  - name: lint
+    taskRef:
+      name: golangci-lint
+    runAfter:
+    - fetch-repository
+    workspaces:
+    - name: source
+      workspace: shared-workspace
+    params:
+    - name: package
+      value: go-demo-app
+  - name: test
+    taskRef:
+      name: golang-test
+    runAfter:
+    - fetch-repository
+    workspaces:
+    - name: source
+      workspace: shared-workspace
+    params:
+    - name: package
+      value: go-demo-app
+  - name: fetch-ops-repository
+    runAfter:
+    - fetch-repository
+    - lint
+    - test
+    taskRef:
+      name: git-clone
+    workspaces:
+    - name: output
+      workspace: shared-ops-workspace
+    params:
+    - name: url
+      value: https://github.com/springone-tour-2020-cicd/go-demo-app-ops.git
+    - name: revision
+      value: master
+    - name: deleteExisting
+      value: "true"
+  - name: update-image-revision
+    taskRef:
+      name: update-image-revision
+    runAfter:
+    - fetch-repository
+    - lint
+    - test
+    - fetch-ops-repository
+    workspaces:
+    - name: source
+      workspace: shared-ops-workspace
+    params:
+    - name: GITHUB_TOKEN_SECRET
+      value: $(params.github-token-secret)
+    - name: GITHUB_TOKEN_SECRET_KEY
+      value: $(params.github-token-secret-key)
+    - name: REVISION
+      value: $(params.revision)

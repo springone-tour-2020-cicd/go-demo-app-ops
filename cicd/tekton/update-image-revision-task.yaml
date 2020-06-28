@@ -1,0 +1,47 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: update-image-revision
+spec:
+  workspaces:
+    - name: source
+  params:
+    - name: GITHUB_TOKEN_SECRET
+      type: string
+      description: Name of the secret holding the github-token.
+      default: github-token
+    - name: GITHUB_TOKEN_SECRET_KEY
+      type: string
+      description: Name of the secret key holding the github-token.
+      default: GITHUB_TOKEN
+    - name: REVISION
+      type: string
+      description: The source code repository's Git revision to build with kpack.
+  steps:
+  - name: update-revision
+    image: mikefarah/yq
+    workingDir: $(workspaces.source.path)
+    script: |
+        cd cicd/kpack
+        yq w -i image.yaml "spec.source.git.revision" "\$(params.REVISION)"
+  - name: git-commit
+    image: gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/git-init:v0.12.1
+    workingDir: $(workspaces.source.path)
+    script: |
+      apk add tree
+      tree
+      git remote set-url origin https://andreasevers:${GITHUB_TOKEN}@github.com/springone-tour-2020-cicd/go-demo-app-ops.git
+      git config user.name build-bot
+      git config user.email build-bot@bots.bot
+      git checkout -b temp-branch
+      git add cicd/kpack/image.yaml
+      git commit -m "Setting revision to current source code repo commit to trigger kpack"
+      git checkout master
+      git merge temp-branch
+      git push origin master
+    env:
+      - name: GITHUB_TOKEN
+        valueFrom:
+          secretKeyRef:
+            name: $(params.GITHUB_TOKEN_SECRET)
+            key: $(params.GITHUB_TOKEN_SECRET_KEY)

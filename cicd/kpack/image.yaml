@@ -1,0 +1,15 @@
+apiVersion: build.pivotal.io/v1alpha1
+kind: Image
+metadata:
+  name: go-demo-app
+spec:
+  builder:
+    name: paketo-builder
+    kind: Builder
+  serviceAccount: kpack-bot
+  #cacheSize: "1.5Gi"
+  source:
+    git:
+      url: https://github.com/springone-tour-2020-cicd/go-demo-app
+      revision: placeholder
+  tag: andreasevers/go-demo-app

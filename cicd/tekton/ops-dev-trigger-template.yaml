@@ -1,0 +1,32 @@
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: TriggerTemplate
+metadata:
+  name: ops-dev-trigger-template
+spec:
+  resourcetemplates:
+  - apiVersion: tekton.dev/v1beta1
+    kind: PipelineRun
+    metadata:
+      generateName: ops-dev-pipeline-run-
+    spec:
+      pipelineRef:
+        name: ops-dev-pipeline
+      workspaces:
+      - name: shared-workspace
+        persistentvolumeclaim:
+          claimName: workspace-pvc
+      params:
+      - name: tag
+        value: $(params.tag)
+      - name: repo-url
+        value: https://github.com/springone-tour-2020-cicd/go-demo-app-ops.git
+      - name: revision
+        value: master
+      - name: github-token-secret
+        value: github-token
+      - name: github-token-secret-key
+        value: GITHUB_TOKEN
+      serviceAccountName: build-bot
+  params:
+  - name: tag
+    description: Tag of the new Docker image.

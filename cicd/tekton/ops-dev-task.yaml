@@ -1,0 +1,49 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: ops-dev
+spec:
+  workspaces:
+    - name: source
+  params:
+    - name: GITHUB_TOKEN_SECRET
+      type: string
+      description: Name of the secret holding the github-token.
+      default: github-token
+    - name: GITHUB_TOKEN_SECRET_KEY
+      type: string
+      description: Name of the secret key holding the github-token.
+      default: GITHUB_TOKEN
+    - name: TAG
+      type: string
+      description: Name of the new image tag.
+  steps:
+  - name: update-image-tag
+    image: mikefarah/yq
+    workingDir: $(workspaces.source.path)
+    script: |
+        cd ops/overlays/dev
+        yq m -i -x kustomization.yaml - <<EOD
+        images:
+          - name: andreasevers/go-demo-app  # used for Kustomize matching
+            newTag: $(params.TAG)
+        EOD
+  - name: git-commit
+    image: gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/git-init:v0.12.1
+    workingDir: $(workspaces.source.path)
+    script: |
+      git remote set-url origin https://andreasevers:${GITHUB_TOKEN}@github.com/springone-tour-2020-cicd/go-demo-app-ops.git
+      git config user.name build-bot
+      git config user.email build-bot@bots.bot
+      git checkout -b temp-branch
+      git add ops/overlays/dev/kustomization.yaml
+      git commit -m "Automatically promoting dev version"
+      git checkout master
+      git merge temp-branch
+      git push origin master
+    env:
+      - name: GITHUB_TOKEN
+        valueFrom:
+          secretKeyRef:
+            name: $(params.GITHUB_TOKEN_SECRET)
+            key: $(params.GITHUB_TOKEN_SECRET_KEY)
