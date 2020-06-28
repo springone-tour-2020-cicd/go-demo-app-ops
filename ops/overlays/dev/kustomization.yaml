@@ -6,4 +6,3 @@ resources:
 namespace: dev
 images:
   - name: andreasevers/go-demo-app # used for Kustomize matching
-    newTag: 1.0.1
