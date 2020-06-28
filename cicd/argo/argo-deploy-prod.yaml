@@ -9,7 +9,7 @@ spec:
   project: default
   source:
     path: ops/overlays/prod
-    repoURL: https://github.com/springone-tour-2020-cicd/go-demo-app.git
+    repoURL: https://github.com/springone-tour-2020-cicd/go-demo-app-ops.git
     targetRevision: HEAD
   syncPolicy:
     automated: {}
