@@ -6,3 +6,4 @@ resources:
 namespace: dev
 images:
   - name: andreasevers/go-demo-app # used for Kustomize matching
+namePrefix: dev-
