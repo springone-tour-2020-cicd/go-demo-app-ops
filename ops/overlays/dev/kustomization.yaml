@@ -6,5 +6,5 @@ resources:
 namespace: dev
 images:
   - name: andreasevers/go-demo-app # used for Kustomize matching
-    newTag: b3.20200628.232414
+    newTag: latest
 namePrefix: dev-
