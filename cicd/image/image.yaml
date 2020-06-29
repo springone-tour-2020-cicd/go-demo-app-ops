@@ -11,5 +11,5 @@ spec:
   source:
     git:
       url: https://github.com/springone-tour-2020-cicd/go-demo-app
-      revision: defccef6fcf47dfb91c2024c56c18c1082cbf30e
+      revision: 1b8d529579c333e2027367649ff21d66a7ab029e
   tag: andreasevers/go-demo-app
