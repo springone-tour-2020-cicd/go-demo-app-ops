@@ -27,7 +27,7 @@ spec:
   - name: git-commit
     image: gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/git-init:v0.12.1
     workingDir: $(workspaces.source.path)
-    script: |g
+    script: |
       apk add tree
       tree
       git remote set-url origin https://andreasevers:${GITHUB_TOKEN}@github.com/springone-tour-2020-cicd/go-demo-app-ops.git
