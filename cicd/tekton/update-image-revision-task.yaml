@@ -22,7 +22,7 @@ spec:
     image: mikefarah/yq
     workingDir: $(workspaces.source.path)
     script: |
-        cd cicd/kpack
+        cd cicd/image
         yq w -i image.yaml "spec.source.git.revision" "\$(params.REVISION)"
   - name: git-commit
     image: gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/git-init:v0.12.1
