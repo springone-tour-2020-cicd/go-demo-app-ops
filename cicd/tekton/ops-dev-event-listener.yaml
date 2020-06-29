@@ -11,3 +11,6 @@ spec:
       name: ops-dev-trigger-template
     bindings:
     - ref: ops-dev-trigger-binding
+    interceptors:
+      - cel:
+          filter: (body.push_data.tag != 'latest')

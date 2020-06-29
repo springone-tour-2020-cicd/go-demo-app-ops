@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: fileserver-testing-dynamic-pvc
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: "nfs-client"
+#  volumeName: fileserver-ops-dev
+  resources:
+    requests:
+      storage: 500M

@@ -13,8 +13,15 @@ spec:
         name: ops-dev-pipeline
       workspaces:
       - name: shared-workspace
-        persistentvolumeclaim:
-          claimName: fileserver-claim
+        volumeClaimTemplate:
+          spec:
+            accessModes:
+            - ReadWriteMany
+            storageClassName: "nfs-client"
+            #  volumeName: fileserver-ops-dev
+            resources:
+              requests:
+                storage: 500M
       params:
       - name: tag
         value: $(params.tag)
