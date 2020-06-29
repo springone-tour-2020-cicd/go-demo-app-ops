@@ -27,8 +27,6 @@ spec:
         echo $LONG_SHA - $SHORT_SHA
         cd cicd/image
         yq w -i image.yaml "spec.source.git.revision" "$(params.REVISION)"
-        yq w -i image.yaml "spec.imageTaggingStrategy" "None"
-        yq w -i image.yaml "spec.tag" "andreasevers/go-demo-app:$SHORT_SHA"
   - name: git-commit
     image: gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/git-init:v0.12.1
     workingDir: $(workspaces.source.path)
