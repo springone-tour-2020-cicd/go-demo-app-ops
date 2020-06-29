@@ -14,7 +14,7 @@ spec:
       workspaces:
       - name: shared-workspace
         persistentvolumeclaim:
-          claimName: workspace-pvc
+          claimName: fileserver-claim
       params:
       - name: tag
         value: $(params.tag)

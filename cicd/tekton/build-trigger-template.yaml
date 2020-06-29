@@ -14,10 +14,10 @@ spec:
       workspaces:
       - name: shared-workspace
         persistentvolumeclaim:
-          claimName: workspace-pvc
+          claimName: fileserver-claim
       - name: shared-ops-workspace
         persistentvolumeclaim:
-          claimName: workspace-pvc
+          claimName: fileserver-claim
       serviceAccountName: build-bot
       podTemplate:
         volumes:

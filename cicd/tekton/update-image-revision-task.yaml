@@ -34,7 +34,7 @@ spec:
       git config user.name build-bot
       git config user.email build-bot@bots.bot
       git checkout -b temp-branch
-      git add cicd/kpack/image.yaml
+      git add cicd/image/image.yaml
       git commit -m "Setting revision to current source code repo commit to trigger kpack"
       git checkout master
       git merge temp-branch
