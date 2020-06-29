@@ -23,7 +23,7 @@ metadata:
   name: demo-builder
 spec:
   tag: andreasevers/demo-builder
-  serviceAccount: kpack-demo-bot
+  serviceAccount: kpack-bot
   stack: demo-stack
   store: demo-store
   order:
