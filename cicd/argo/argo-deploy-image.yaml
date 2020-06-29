@@ -8,7 +8,7 @@ spec:
     server: https://kubernetes.default.svc
   project: default
   source:
-    path: cicd/kpack/image.yaml
+    path: cicd/kpack
     repoURL: https://github.com/springone-tour-2020-cicd/go-demo-app-ops.git
     targetRevision: HEAD
   syncPolicy:
