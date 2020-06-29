@@ -7,4 +7,3 @@ namespace: dev
 images:
   - name: andreasevers/go-demo-app # used for Kustomize matching
     newTag: b11.20200629.114418
-namePrefix: dev-
